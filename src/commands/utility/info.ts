@@ -26,7 +26,7 @@ export default class Info extends Command {
         message.util?.send(this.client.util.embed()
         .setAuthor(`${this.client.user!.username}`)
         .setDescription(
-            `[Source Code](https://github.com/Naira0terminator/generic-bot)
+            `[Source Code](https://github.com/Naira0terminator/generic-bot-2.0)
 
             **Uptime** \`${uptime.trim()}\`\n
             **Commands** \`${client.commandHandler.modules.size}\` | **Listeners** \`${client.listenerHandler.modules.size}\`\n
