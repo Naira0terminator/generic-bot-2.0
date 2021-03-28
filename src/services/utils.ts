@@ -1,4 +1,5 @@
 import { Message } from 'discord.js';
+import client from '..';
 
 // did someone say stupidly long one liner
 
@@ -12,6 +13,10 @@ export const resolveRole = (message: Message, object: string) => {
 
 export const resolveMember = (message: Message, object: string) => {
     return message.guild?.members.cache.get(object) || message.mentions.members?.first() || message.guild?.members.cache.find(mem => mem.user.username.toLowerCase() === object.toLowerCase());
+}
+
+export const resolveGuild = (object: string) => {
+    return client.guilds.cache.find(guild => guild.name.toLowerCase() === object.toLowerCase()) || client.guilds.cache.get(object);
 }
 
 export const includesOne = (str: string, match: string[]) => {
@@ -30,3 +35,5 @@ export const uid = (size: number = 4) => {
 
     return str;
 }
+
+export const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);

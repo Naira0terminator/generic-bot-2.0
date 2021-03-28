@@ -10,6 +10,13 @@ export default class MessageEvent extends Listener {
         });
     }
     async exec(message: Message) {
+        if(message.author.bot)
+            return;
+
         await client.leveler.handleMessage(message);
+
+        const cleanChannels: Array<string> = client.settings.get(message.guild?.id!, 'clean-channel', null);
+        if(cleanChannels && cleanChannels.includes(message.channel.id))
+           await message.delete();
     }
 }

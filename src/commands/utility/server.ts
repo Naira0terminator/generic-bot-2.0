@@ -25,6 +25,6 @@ export default class Server extends Command {
             .addField('● Ban count', (await guild?.fetchBans())?.size, true)
             .addField('● Owner', guild?.owner?.user.username)
             .setColor('RANDOM')
-            .setFooter(`ID: ${guild?.id} | created ${createdAt.fromNow()} ago`))
+            .setFooter(`ID: ${guild?.id} | created ${createdAt.fromNow()}`))
     }
 }

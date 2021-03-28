@@ -22,7 +22,7 @@ export default class User extends Command {
         });
     }
     async exec(message: Message, { member }: { member: GuildMember }) {
-
+        
         const formatDate = (date: Date | null) => moment(date!).format('dddd, MMMM Do YYYY, HH:mm');
         message.channel.send(this.client.util.embed()
             .setAuthor(member.user.username, member.user.displayAvatarURL())

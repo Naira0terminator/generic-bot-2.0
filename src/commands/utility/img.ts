@@ -7,7 +7,7 @@ export default class Img extends Command {
     constructor() {
         super('img', {
             aliases: ['image-search', 'img'],
-            cooldown: 12000,
+            cooldown: 15000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
             description: {
