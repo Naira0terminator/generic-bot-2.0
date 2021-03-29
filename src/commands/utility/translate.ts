@@ -41,9 +41,11 @@ export default class Translate extends Command {
             return responder.fail(message, 'That is not a supported language');
 
         const translation = await translate(text, {from: from, to: to});
-        
+
+        const langs: any = translate.languages;
+
         message.channel.send(this.client.util.embed()
-            .setTitle(`${from} > ${to}`) 
+            .setTitle(`${from.length > 2 ? from : langs[from]} => ${to.length > 2 ? to : langs[to]}`) 
             .setDescription(translation.text)
             .setColor('RANDOM'));
     }
