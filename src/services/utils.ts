@@ -36,4 +36,6 @@ export const uid = (size: number = 4) => {
     return str;
 }
 
-export const random = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
+export const randRange = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min);
+
+export const random = (value: number) => Math.floor(Math.random() * value);

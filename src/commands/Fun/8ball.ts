@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo'; 
 import { Message } from 'discord.js';
 import responder from '../../services/responder';
+import { random } from '../../services/utils';
 
 export default class EightBall extends Command {
     constructor() {
@@ -22,6 +23,6 @@ export default class EightBall extends Command {
             return responder.fail(message, 'You must ask the 8ball a question!');
 
         const answers = ['Yes', 'No', 'Possibly', 'Dont count on it', 'Most likely', 'Outlook not so good', 'Outlook good'];
-        responder.send(message, answers[Math.floor(Math.random() * answers.length)], {color: 'RANDOM'});
+        responder.send(message, answers[random(answers.length)], {color: 'RANDOM'});
     }
 }

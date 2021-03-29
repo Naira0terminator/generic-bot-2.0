@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo'; 
 import { Message, GuildMember } from 'discord.js';
 import responder from '../../services/responder';
+import { random } from '../../services/utils';
 
 export default class Interact extends Command {
     constructor() {
@@ -36,7 +37,7 @@ export default class Interact extends Command {
             `;
 
             const array = String(eval(func)).split(',');
-            return array[Math.floor(Math.random() * array.length)];
+            return array[random(array.length)];
         }
 
         responder.send(message, response(message.util?.parsed?.alias!), {color: 'RANDOM'});

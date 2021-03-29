@@ -1,5 +1,6 @@
 import { Command } from 'discord-akairo'; 
 import { Message, GuildMember } from 'discord.js';
+import { randRange } from '../../services/utils';
 
 export default class Name extends Command {
     constructor() {
@@ -22,7 +23,7 @@ export default class Name extends Command {
     async exec(message: Message, { member }: { member: GuildMember}) {
         message.channel.send(this.client.util.embed()
         .setAuthor('gay rate', member.user.displayAvatarURL())
-        .setDescription(`**${member.user.username}** is \`${Math.floor(Math.random() * 113)}\`% gay 🏳️‍🌈`)
+        .setDescription(`**${member.user.username}** is \`${randRange(1, 110)}\`% gay 🏳️‍🌈`)
         .setColor('RANDOM')
         .setFooter('the gay rate machine is 100% accurate'));
     }
