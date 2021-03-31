@@ -13,7 +13,9 @@ export default class MessageEvent extends Listener {
         if(message.author.bot)
             return;
 
-        await client.leveler.handleMessage(message);
+        const levelingState = client.settings.get(message.guild?.id!, 'leveling-state', null);
+        if(levelingState)
+            await client.leveler.handleMessage(message);
 
         const cleanChannels: Array<string> = client.settings.get(message.guild?.id!, 'clean-channel', null);
         if(cleanChannels && cleanChannels.includes(message.channel.id))

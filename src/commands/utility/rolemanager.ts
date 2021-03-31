@@ -1,7 +1,6 @@
 import { Command } from 'discord-akairo'; 
 import { Message, Role } from 'discord.js';
 import responder from '../../services/responder';
-import client from '../../index';
 import { resolveRole } from '../../services/utils';
 
 export default class RoleManager extends Command {
@@ -61,6 +60,9 @@ export default class RoleManager extends Command {
         let role: string | Role = values[0], value: string = values[1];
 
         role = resolveRole(message, String(role))!;
+        
+        if(!role)
+            return responder.fail(message, 'Could not resolve the provided role!');
 
         if(c) {
             try {
