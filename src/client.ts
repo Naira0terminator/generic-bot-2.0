@@ -2,12 +2,13 @@ import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler, Sequel
 import { Message } from 'discord.js';
 import config from './config.json';
 import Responder  from './services/responder';
-import { redis, sequelize } from './services/database';
+import { redis, sequelize, sql } from './services/database';
 import Redis from 'ioredis';
 import Leveler from './services/leveler';
 import { Sequelize } from 'sequelize/types';
 import Settings from './models/settings';
 import { join } from 'path';
+import PG from 'pg';
 
 export default class Client extends AkairoClient {
     commandHandler: CommandHandler;
@@ -19,6 +20,7 @@ export default class Client extends AkairoClient {
     leveler: Leveler;
     settings: SequelizeProvider;
     snipeCache: Map<string, any>;
+    sql: PG.Client;
 
     constructor() {
         super({ownerID: config.ownerID,} , {disableMentions: 'everyone'})
@@ -58,6 +60,7 @@ export default class Client extends AkairoClient {
         this.sequelize = sequelize;
         this.leveler = new Leveler();
         this.snipeCache = new Map();
+        this.sql = sql;
 
         this.settings = new SequelizeProvider(Settings, {
             idColumn: 'guildID',
