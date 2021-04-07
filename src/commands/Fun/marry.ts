@@ -28,9 +28,9 @@ export default class Marry extends Command {
             return responder.fail(message, 'you must provide a valid user');
 
 
-        const data = await sql.query(`SELECT couple FROM marriage WHERE guild = '${message.guild?.id}'`);
+        const data = await sql.query(`SELECT couple FROM marriage WHERE guild = '${message.guild?.id}' and '${message.author.id}' = ANY (couple)`);
         
-        if(data.rowCount > 0)
+        if(data.rowCount)
             return responder.fail(message, 'You or the provided user is already married');
 
         const filter = (message: Message) => includesOne(message.content.toLowerCase(), ['yes', 'y', 'no', 'n']) && !message.author.bot && message.author.id === target.id;
