@@ -13,7 +13,7 @@ export default class Avatar extends Command {
                 {
                     id: 'server',
                     match: 'flag',
-                    flag: '-server',
+                    flag: 'server',
                 },
                 {
                     id: 'member',

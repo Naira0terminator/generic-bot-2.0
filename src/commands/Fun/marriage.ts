@@ -1,9 +1,8 @@
 import { Command } from 'discord-akairo'; 
-import { Message, GuildMember } from 'discord.js';
+import { Message } from 'discord.js';
 import responder from '../../services/responder';
-import client from '../../index';
-import marriage from '../../models/marriage';
 import moment from 'moment';
+import { sql } from '../../services/database';
 
 export default class Marry extends Command {
     constructor() {
@@ -23,31 +22,26 @@ export default class Marry extends Command {
         });
     }
     async exec(message: Message, { divorce }: {divorce: string}) {
-        const isMarried = await marriage.findOne({where: {spouce1: message.member?.id}});
 
-        if(divorce && isMarried) {
-            await isMarried.destroy();
+        const data = await sql.query(`SELECT couple, date FROM marriage WHERE guild = '${message.guild?.id}' and '${message.author.id}' = ANY(couple) `);
+
+        if(divorce && data.rowCount) {
+            await sql.query(`DELETE FROM marriage WHERE guild = '${message.guild?.id}' and '${message.author.id}' = ANY(couple)`)
             return responder.send(message, 'Your divorce is finalized!');
         }
 
-        if(!isMarried) 
+        if(!data.rowCount) 
             return responder.fail(message, `You are not married`);
         
         const resolve = (user: string) => {
             let res = this.client.users.cache.get(user)?.username;
-
-            if(!res)
-                res = 'Unknown User';
-
-            return res;
+            return res ? res : 'Unknown User';
         }
-        
-        const spouce1 = String(isMarried.get('spouce1'));
-        const spouce2 = String(isMarried.get('spouce2'));
-        const date = moment(new Date(String(isMarried.get('date'))))
-        
+
+        const date = moment(data.rows[0].date);
+
         message.channel.send(this.client.util.embed()
-        .setDescription(`**${resolve(spouce1)}** ❤ **${resolve(spouce2)}**`)
+        .setDescription(`**${resolve(data.rows[0].couple[0])}** ❤ **${resolve(data.rows[0].couple[1])}**`)
         .setColor('#FF1493')
         .setFooter(`Married since ${date.fromNow()}`));
     }
