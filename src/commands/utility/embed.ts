@@ -10,7 +10,7 @@ export default class Embed extends Command {
             cooldown: 12000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
-            description: '',
+            description: 'allows you to build advanced or simple custom embeds and even save and retrieve them. use the command without args to see options or use the command with `refrence` on a guide to see how to build embeds',
             args: [
                 {
                     id: 'raw',
@@ -36,14 +36,44 @@ export default class Embed extends Command {
                     id: 'f_raw',
                     match: 'flag',
                     flag: '-raw'
+                },
+                {
+                    id: 'ref',
+                    match: 'flag',
+                    flag: 'reference'
                 }
             ]
         });
     }
     async exec(message: Message, { raw, get, all, del, f_raw }: { raw: string, get: string, all: string, del: string, f_raw: string }) {
 
-        if(!raw && !all)
-            return Responder.fail(message, 'you must provde a valid embed syntax');
+        if(all) {
+            const entries = Object.keys(client.settings.items.get(message.author.id));
+            Responder.send(message, entries.filter(v => v !== '').join(', '));
+            return console.log(client.settings.items.get(message.author.id))
+        }
+
+        if(!raw) {
+            return message.channel.send(this.client.util.embed()
+            .setDescription(`
+            [guide on building a custom embed](https://github.com/Naira0terminator/generic-bot-2.0/wiki/Embed-builder-guide)\n
+            use the command with one of the following arguments to perform special actions 
+            **Example** \`.embed get myEmbed\`\n
+            \`-raw\` JSON object | allows you to use a raw json object to build an embed see the link above for more info
+            \`get\` id | retrieves an embed using its given id. check the above link to see how to save embeds
+            \`all\` | gets all the ids of your saved embeds
+            \`delete\`id | deletes a saved embed by its id`)
+            .setColor('RANDOM'))
+        }
+
+        if(get) {
+            const data = client.settings.get(message.author.id, raw, null);
+
+            if(!data)
+                return Responder.fail(message, 'could not retrieve embed');
+
+            return message.channel.send({embed: data});
+        }
 
         if(f_raw) {
             const parsed = JSON.parse(raw);
@@ -57,24 +87,9 @@ export default class Embed extends Command {
             return message.channel.send({embed: parsed});
         }
         
-        if(get) {
-            const data = client.settings.get(message.author.id, raw, null);
-
-            if(!data)
-                return Responder.fail(message, 'could not retrieve embed');
-
-            return message.channel.send({embed: data});
-        }
-
         if(del) {
             await client.settings.delete(message.author.id, raw);
             return Responder.send(message, `Entery was removed`);
-        }
-
-        if(all) {
-            const entries = Object.keys(client.settings.items.get(message.author.id));
-            Responder.send(message, entries.filter(v => v !== '').join(', '));
-            return console.log(client.settings.items.get(message.author.id))
         }
 
         let constructor: any = {
@@ -103,6 +118,7 @@ export default class Embed extends Command {
         }
 
         const arr = raw.trim().split(/",?\s*/gi).filter((v, i) => v !== '');
+
         let saved = {
             saved: false,
             id: '',
