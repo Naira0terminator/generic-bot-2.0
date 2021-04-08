@@ -25,7 +25,6 @@ export default class Marry extends Command {
         if(!target || target.user.bot || target.id === message.author.id)
             return responder.fail(message, 'you must provide a valid user');
 
-
         const data = await sql.query(`SELECT couple FROM marriage WHERE guild = '${message.guild?.id}' and '${message.author.id}' = ANY (couple)`);
         
         if(data.rowCount)

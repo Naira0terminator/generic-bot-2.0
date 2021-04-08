@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo'; 
 import { Message } from 'discord.js';
 import responder from '../../services/responder';
+import { varParser } from '../../services/utils';
 
 export default class Say extends Command {
     constructor() {
@@ -9,7 +10,7 @@ export default class Say extends Command {
             cooldown: 0,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
-            description: 'Makes the bot echo the provided args. use \`-e\` to make the response into an embed and \`-owo\` to owoify the response.',
+            description: 'Makes the bot echo the provided args. use \`-e\` to make the response into an embed and \`-owo\` to owoify the response. works with [Variables](https://github.com/Naira0terminator/generic-bot-2.0/wiki/variables)',
             args: [
                 {
                     id: 'embed',
@@ -30,6 +31,8 @@ export default class Say extends Command {
     }
     async exec(message: Message, { embed, owo, say}: Record<string, string>) {
         
+        say = varParser(say, message.member!);
+
         if(!say)
             return responder.fail(message, 'say what?');
 

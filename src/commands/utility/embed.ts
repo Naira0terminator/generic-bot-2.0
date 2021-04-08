@@ -11,7 +11,7 @@ export default class Embed extends Command {
             cooldown: 12000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
-            description: 'allows you to build advanced or simple custom embeds and even save and retrieve them. use the command without args to see options and get a link to an embed builder guide',
+            description: 'allows you to build advanced or simple custom embeds and even save and retrieve them works with [Variables](https://github.com/Naira0terminator/generic-bot-2.0/wiki/variables). use the command without args to see options and get a link to an embed builder guide',
             args: [
                 {
                     id: 'raw',
@@ -173,6 +173,7 @@ export default class Embed extends Command {
         if(saved) 
             await client.settings.set(message.author.id, saved.id, constructor);
 
-        message.channel.send({embed: constructor});
+        message.channel.send(saved.saved ? `Saved embed as **${saved.id}** | use \`get id_name\` to view it` : '', 
+            {embed: constructor});
     }
 }
