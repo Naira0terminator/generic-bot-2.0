@@ -42,7 +42,7 @@ export default class Marry extends Command {
                 try {
                     await sql.query(`INSERT INTO marriage(guild, couple, date) VALUES(${message.guild?.id}, ARRAY [${message.author.id}, ${target.id}], '${new Date().toString()}')`)
                 } catch(err) {
-                    return responder.error(message, `Could not create marriage table ${err}`);
+                    return responder.error(message, `Could not create marriage ${err.message}`);
                 }
                 
                 collector.stop('response');
