@@ -58,6 +58,8 @@ export const varParser = (str: any, member: GuildMember) => {
         "{serverName}": member.guild.name,
         "{serverID}": member.guild.id,
         "{memberCount}": member.guild.memberCount,
+        "{memberAvatar}": member.user.displayAvatarURL({dynamic: true, size: 2048}),
+        "{serverAvatar}": member.guild.iconURL({dynamic: true, size: 2048}),
     }
 
     for(const [key, value] of Object.entries(variables))

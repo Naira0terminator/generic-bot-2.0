@@ -47,7 +47,7 @@ export default class Embed extends Command {
         });
     }
     async exec(message: Message, { raw, get, all, del, f_raw }: { raw: string, get: string, all: string, del: string, f_raw: string }) {
-
+        
         if(all) {
             const items = client.settings.items.get(message.author.id)
 
@@ -72,11 +72,13 @@ export default class Embed extends Command {
         }
 
         if(get) {
-            // clones the object so the data doesnt get mutated 
-            const {...data} = client.settings.get(message.author.id, raw, null);
+            const getData = client.settings.get(message.author.id, raw, null);
 
-            if(!data)
+            if(!getData)
                 return Responder.fail(message, 'could not retrieve embed');
+
+            // clones the object so the data doesnt get mutated. also it doestn directly try to destructure the data to avoid errors if its null.
+            const {...data} = getData;
 
             // parses all variables in the object 
             for(const [key, value] of Object.entries(data)) {

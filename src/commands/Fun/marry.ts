@@ -1,8 +1,6 @@
 import { Command } from 'discord-akairo'; 
 import { Message, GuildMember } from 'discord.js';
 import responder from '../../services/responder';
-import marriage from '../../models/marriage';
-import { Op } from 'sequelize';
 import { includesOne } from '../../services/utils';
 import { sql } from '../../services/database';
 
