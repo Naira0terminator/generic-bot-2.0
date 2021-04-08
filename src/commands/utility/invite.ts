@@ -12,6 +12,6 @@ export default class Invite extends Command {
         });
     }
     async exec(message: Message) {
-        responder.send(message, '[Click here to open invite](https://discord.com/oauth2/authorize?client_id=583159512924684288&permissions=8&scope=bot)');
+        responder.send(message, `[Click here to open invite](https://discord.com/oauth2/authorize?client_id=${this.client.user?.id}&permissions=8&scope=bot)`);
     }
 }
