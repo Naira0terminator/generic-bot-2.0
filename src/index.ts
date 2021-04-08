@@ -27,6 +27,7 @@ export default client;
 /** TODO
  * moderation   []
  * logging      []
+ * pet system   []
  * economy      []
  * gambling     []
  * music player []
