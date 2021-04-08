@@ -27,8 +27,10 @@ export default class CoinFlip extends Command {
         switch(input) {
             case 'h':
                 input = 'heads';
+                break;
             case 't':
                 input = 'tails';
+                break;
         }
 
         const h_t = ['heads', 'tails'];

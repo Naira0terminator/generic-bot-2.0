@@ -9,6 +9,7 @@ export default class Name extends Command {
             aliases: ['level-settings', 'lvl-settings', 'lsettings'],
             cooldown: 0,
             clientPermissions: ['SEND_MESSAGES'],
+            userPermissions: ['ADMINISTRATOR'],
             channel: 'guild',
             description: 'allows you to customize the leveling system. use the command with `options` to see the setting options',
             args: [
