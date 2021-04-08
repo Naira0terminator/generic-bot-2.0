@@ -10,7 +10,7 @@ export default class Embed extends Command {
             cooldown: 12000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
-            description: 'allows you to build advanced or simple custom embeds and even save and retrieve them. use the command without args to see options or use the command with `refrence` on a guide to see how to build embeds',
+            description: 'allows you to build advanced or simple custom embeds and even save and retrieve them. use the command without args to see options and get a link to an embed builder guide',
             args: [
                 {
                     id: 'raw',
