@@ -2,6 +2,7 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import client from '../..';
 import Responder from '../../services/responder';
+import { varParser } from '../../services/utils';
 
 export default class Embed extends Command {
     constructor() {
@@ -48,9 +49,13 @@ export default class Embed extends Command {
     async exec(message: Message, { raw, get, all, del, f_raw }: { raw: string, get: string, all: string, del: string, f_raw: string }) {
 
         if(all) {
-            const entries = Object.keys(client.settings.items.get(message.author.id));
-            Responder.send(message, entries.filter(v => v !== '').join(', '));
-            return console.log(client.settings.items.get(message.author.id))
+            const items = client.settings.items.get(message.author.id)
+
+            if(!items)
+                return Responder.fail(message, 'you do not have any embeds saved');
+
+            const entries = Object.keys(items);
+            return Responder.send(message, entries.filter(v => v !== '').join(', '));
         }
 
         if(!raw) {
@@ -67,10 +72,23 @@ export default class Embed extends Command {
         }
 
         if(get) {
-            const data = client.settings.get(message.author.id, raw, null);
+            // clones the object so the data doesnt get mutated 
+            const {...data} = client.settings.get(message.author.id, raw, null);
 
             if(!data)
                 return Responder.fail(message, 'could not retrieve embed');
+
+            // parses all variables in the object 
+            for(const [key, value] of Object.entries(data)) {
+                if(typeof data[key] === 'object' && !Array.isArray(data[key]) && data[key]) {
+                    for(const [k, v] of Object.entries(data[key]))
+                        data[key][k] = varParser(v, message.member!);
+
+                    continue;
+                }
+
+                data[key] = varParser(value, message.member!);
+            }
 
             return message.channel.send({embed: data});
         }

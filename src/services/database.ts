@@ -26,10 +26,10 @@ export async function init_psql() {
 export const redis = new Redis();
 redis.on('connect', () => console.log('Redis has connected!'));
 
-export const sequelize = new Sequelize('database', 'username', 'password', {
+export const sequelize = new Sequelize('database', 'user', 'password', {
     host: 'localhost',
     dialect: 'sqlite',
-    database: 'settings.sqlite',
+    storage: 'settings.sqlite',
     logging: false,
 });
 
