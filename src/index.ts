@@ -25,12 +25,15 @@ export default client;
 
 
 /** TODO
- * moderation   []
- * logging      []
- * pet system   []
- * economy      []
- * gambling     []
- * music player []
- * statistics   []
- * invite log   []
+ * moderation           []
+ * logging              []
+ * pet system           []
+ * economy              []
+ * gambling             []
+ * music player         []
+ * statistics           []
+ * invite log           []
+ * react roles          []
+ * auto roles           []
+ * self assign roles    []
  */
