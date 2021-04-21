@@ -35,5 +35,6 @@ export default client;
  * invite log           []
  * react roles          []
  * auto roles           []
- * self assign roles    []
+ * self assign roles    [*]
+ * fishing system       []
  */

@@ -33,12 +33,12 @@ export default class HelpCommand extends Command {
 			.addField(
 				'❯ Description',
 				command.description.content || command.description || 'A cool command without a description.')
-			.addField('❯ Cooldown:', ms(command.cooldown || this.handler.defaultCooldown, {long: true}) || 'no cooldown', true);
+			.addField('❯ Cooldown', ms(command.cooldown || this.handler.defaultCooldown, {long: true}) || 'no cooldown', true);
 			if (command.aliases!.length > 1) {
 				embed.addField('❯ Aliases', `\`${command.aliases!.join('`, `')}\``);
 			}
 			if(command.description.usage) {
-				embed.addField('❯ usage:', `<prefix>${command.aliases![0]} ${command.description.usage ? command.description.usage : ''}`)
+				embed.addField('❯ usage', `<prefix>${command.aliases![0]} ${command.description.usage ? command.description.usage : ''}`)
 			}
 			if (command.description.examples && command.description.examples.length) {
 				embed.addField(

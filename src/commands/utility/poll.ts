@@ -3,6 +3,7 @@ import { Message } from 'discord.js';
 import client from '../../index';
 import ms from 'ms';
 import Responder from '../../services/responder';
+import ns from 'node-schedule';
 
 export default class Poll extends Command {
     constructor() {
@@ -27,7 +28,7 @@ export default class Poll extends Command {
     }
     async exec(message: Message, { args }: { args: string[] }) {
 
-        if(!args)
+        if(!args || args.length !== 2)
             return Responder.fail(message, 'You must provide both a question and a time and seperate them with a comma. **Example** `.poll should i ban you, 30 seconds`');
 
         const question = args[0];
@@ -44,15 +45,17 @@ export default class Poll extends Command {
         await msg.react('✅');
         await msg.react('❌');
 
-        setTimeout(async () => {
+        const formatedTime = new Date(Date.now() + ms(time));
+        
+        ns.scheduleJob(formatedTime, async () => {
             const arr = msg.reactions.cache.array().sort((a, b) => b.users.cache.size - a.users.cache.size);
-            let result = `Times up the answer was ${arr[0]?.emoji} with ${arr[0]?.users.cache.size} reactions`;
+            let result = `${arr[0]?.emoji} with ${arr[0]?.users.cache.size} reactions`;
 
             if(arr[0].users.cache.size === arr[1].users.cache.size)
-                result = `it was a tie with ${arr[0]?.users.cache.size} reactions`;
+                result = `a tie with ${arr[0]?.users.cache.size} reactions`;
 
-            await msg.edit(embed.setFooter(`Times up the answer was ${result}`));
+            await msg.edit(embed.setFooter(`Times up the result was ${result}`));
             await msg.reactions.removeAll();
-        }, ms(time));
+        });
     }
 }

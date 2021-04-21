@@ -1,7 +1,7 @@
 import { Command } from 'discord-akairo'; 
 import { Message } from 'discord.js';
 import responder from '../../services/responder';
-import { includesOne } from '../../services/utils';
+import { includesOne, random } from '../../services/utils';
 
 export default class CoinFlip extends Command {
     constructor() {
@@ -34,8 +34,8 @@ export default class CoinFlip extends Command {
         }
 
         const h_t = ['heads', 'tails'];
-        const result = h_t[Math.floor(Math.random() * h_t.length)];
-
+        const result = h_t[random(h_t.length)];
+        
         if(input === result)
             return responder.send(message, `Correct! you win! its ${result}`);
         

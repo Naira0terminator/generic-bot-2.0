@@ -9,6 +9,7 @@ import { Sequelize } from 'sequelize/types';
 import Settings from './models/settings';
 import { join } from 'path';
 import PG from 'pg';
+import Scheduler from './services/scheduler';
 
 export default class Client extends AkairoClient {
     commandHandler: CommandHandler;
@@ -21,6 +22,7 @@ export default class Client extends AkairoClient {
     settings: SequelizeProvider;
     snipeCache: Map<string, any>;
     sql: PG.Client;
+    scheduler: Scheduler;
 
     constructor() {
         super({ownerID: config.ownerID,} , {disableMentions: 'everyone'})
@@ -61,6 +63,7 @@ export default class Client extends AkairoClient {
         this.leveler = new Leveler();
         this.snipeCache = new Map();
         this.sql = sql;
+        this.scheduler = new Scheduler();
 
         this.settings = new SequelizeProvider(Settings, {
             idColumn: 'guildID',

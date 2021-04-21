@@ -1,6 +1,9 @@
 import Redis from 'ioredis';
 import { Sequelize } from 'sequelize';
 import PG from 'pg';
+import { MongoClient } from 'mongodb';
+
+//(async () => await MongoClient.connect('mongodb://localhost/agenda'))();
 
 export const sql = new PG.Client( {
     host: 'localhost',

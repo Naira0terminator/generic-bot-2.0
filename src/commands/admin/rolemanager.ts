@@ -3,6 +3,7 @@ import { Message, Role } from 'discord.js';
 import responder from '../../services/responder';
 import { resolveRole } from '../../services/utils';
 
+// add option for creating roles
 export default class RoleManager extends Command {
     constructor() {
         super('rm', {
