@@ -16,7 +16,7 @@ export default class ReadyEvent extends Listener{
 
         console.log(`${this.client.user?.username} is online!`);
 
-        this.client.user?.setActivity('Running rewrite test build!');
+        this.client.user?.setActivity('Generic-bot 2.0 alpha');
 
         await sequelize.sync();
         await client.settings.init();

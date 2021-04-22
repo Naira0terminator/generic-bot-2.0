@@ -47,7 +47,7 @@ export default class SelfRole extends Command {
 
         if(!r) {
             return responder.send(message, `
-            to assing a role (as long as its been set as a self assign role) use the command with the desired role
+            to assign a role (as long as its been set as a self assign role) use the command with the desired role
             **Example** \`.sf epic role\`
             
             use \`all\` as an argument to view all self assign roles
@@ -66,8 +66,10 @@ export default class SelfRole extends Command {
 
             if(!roles)
                 await client.settings.set(message.guild?.id!, 'self_assign', [role.id]);
-            else 
+            else {
                 roles.push(role.id);
+                await client.settings.set(message.guild?.id!, 'self_assign', roles)
+            }
 
             return responder.send(message, `**${role.name}** has been set as a self assign role!`);
         }
@@ -75,6 +77,9 @@ export default class SelfRole extends Command {
         if(remove) {
             if(!hasPerms)
                 return responder.fail(message, failMessage);
+
+            if(!roles.includes(role.id))
+                return responder.fail(message, 'That is not a valid self assign role');
 
             const filtered = roles.filter(id => id !== role.id);
             await client.settings.set(message.guild?.id!, 'self_assign', filtered);
@@ -86,6 +91,7 @@ export default class SelfRole extends Command {
             return responder.fail(message, 'that is not a valid self assign role');
         
         const hasRole = message.member?.roles.cache.has(role.id) ? true : false;
+        
         !hasRole ? await message.member?.roles.add(role) : await message.member?.roles.remove(role);
 
         responder.send(message, `**${role.name}** has been ${!hasRole ? 'added to you' : 'removed from you'}`, {color: role.hexColor});

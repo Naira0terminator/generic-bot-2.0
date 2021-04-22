@@ -18,6 +18,7 @@ export default class CommandBlockedListener extends Listener {
             userPermissions: `you do not have permission to use **${command}**`,
             dm: `**${command}** is only usable in direct messages`,
             guild: `**${command}** can only be used in a server`,
+            "Disabled Command": `**${command}** is disabled`
         };
         
         console.log(`\n\nBlocking service:\n\nuser: ${message.author.tag} (${message.author.id})\nCommand: ${command.id}\nreason: ${reason}\nChannel: ${channel}\nTime: ${time}`);

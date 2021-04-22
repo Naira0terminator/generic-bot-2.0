@@ -17,7 +17,7 @@ export default class Snipe extends Command {
                 {
                     id: 'e',
                     match: 'flag',
-                    flag: '-e'
+                    flag: 'edit'
                 }
             ]
         });
@@ -31,8 +31,8 @@ export default class Snipe extends Command {
         const embed = this.client.util.embed()
             .setAuthor(cache.author.username, cache.author.displayAvatarURL())
             .setColor('RANDOM')
-            .setDescription(e ? `old: ${cache.old}\nnew: ${cache.new}` : cache.msg.content)
-            .setFooter(e ? '' : `Deleted ${moment(cache.msg.createdAt).fromNow()} ago`);
+            .setDescription(e ? `**before**: ${cache.old}\n**after**: ${cache.new}` : cache.msg.content)
+            .setFooter(e ? '' : `Deleted ${moment(cache.msg.createdAt).fromNow()}`);
 
         if(!e && cache.attatchments)
             embed.setImage(cache.attatchments);

@@ -57,9 +57,11 @@ export default class CleanChannel extends Command {
         }
 
         if(!cleanChannels) 
-            await client.settings.set(message.guild?.id!, 'clean-channel', [channel.id] );
-        else 
+            await client.settings.set(message.guild?.id!, 'clean-channel', [channel.id]);
+        else {
             cleanChannels.push(channel.id);
+            await client.settings.set(message.guild?.id!, 'clean-channel', cleanChannels);
+        }
         
         responder.send(message, `i will now delete any none bot messages in ${channel}`);
     }
