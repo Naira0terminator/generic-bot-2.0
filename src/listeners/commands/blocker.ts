@@ -15,7 +15,6 @@ export default class CommandBlockedListener extends Listener {
 
         const reply: Record<string, string> = {
             owner: `**${command}** is only usable by the bot owner`,
-            userPermissions: `you do not have permission to use **${command}**`,
             dm: `**${command}** is only usable in direct messages`,
             guild: `**${command}** can only be used in a server`,
             "Disabled Command": `**${command}** is disabled`

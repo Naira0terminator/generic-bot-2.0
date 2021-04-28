@@ -31,7 +31,7 @@ export default class Rank extends Command {
         if(lb) 
             return await leaderboard('exp-level', message);
 
-        const serverRank = Number(await client.redis.zrank(`guild[${message.guild?.id}]-exp-level`, `${member.id}`));
+        const serverRank = Number(await client.redis.zrevrank(`guild[${message.guild?.id}]-exp-level`, `${member.id}`));
         const exp = Number(await client.redis.zscore(`guild[${message.guild?.id}]-exp`, `${member.id}`));
 
         const level = Number(await client.redis.zscore(`guild[${message.guild?.id}]-exp-level`, `${member.id}`));

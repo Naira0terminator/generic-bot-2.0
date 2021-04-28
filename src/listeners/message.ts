@@ -13,7 +13,7 @@ export default class MessageEvent extends Listener {
         if(message.author.bot)
             return;
 
-        const levelingState = client.settings.get(message.guild?.id!, 'leveling-state', null);
+        const levelingState = client.settings.get(message.guild?.id!, 'leveling-state', true);
         if(levelingState)
             await client.leveler.handleMessage(message);
 

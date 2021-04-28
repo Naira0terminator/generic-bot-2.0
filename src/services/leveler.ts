@@ -114,7 +114,7 @@ export default class Leveler {
             }
             
             if(await redis.get(`guild[${message.guild?.id}]-exp-msg`) === 'on') {
-                const rank = await redis.zrank(`guild[${message.guild?.id}]-exp-level`, message.author.id);
+                const rank = await redis.zrevrank(`guild[${message.guild?.id}]-exp-level`, message.author.id);
                 message.reply(new MessageEmbed()
                 .setAuthor(message.author.username, message.author.displayAvatarURL())
                 .setDescription(`You are now level **${currentLevel}** ${roles.length ? `You have gained the following role(s) ${roles.join(',')}` : ''}`)

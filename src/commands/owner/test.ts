@@ -10,6 +10,7 @@ export default class Ping extends Command {
         super('test', {
             aliases: ['t1', 'test'],
             clientPermissions: ['SEND_MESSAGES'],
+            userPermissions: 'MANAGE_GUILD',
             channel: 'guild',
             description: 'a testing command',
             args: [

@@ -32,7 +32,7 @@ export default async function leaderboard(type: string, message: Message) {
 
     async function createEmbed() {
         const data = await client.redis.zrevrange(`guild[${message.guild?.id}]-${type}`, start, end, "WITHSCORES");
-        const rank = await client.redis.zrank(`guild[${message.guild?.id}]-${type}`, `${message.author.id}`);
+        const rank = await client.redis.zrevrank(`guild[${message.guild?.id}]-${type}`, `${message.author.id}`);
         
         const format = data.reduce((a: any, c, i) => {
             const idx = i / 2 | 0;

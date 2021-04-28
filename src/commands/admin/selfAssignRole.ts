@@ -9,7 +9,7 @@ export default class SelfRole extends Command {
         super('selfrole', {
             aliases: ['self-role', 'sf'],
             cooldown: 8000,
-            clientPermissions: ['SEND_MESSAGES'],
+            clientPermissions: 'MANAGE_ROLES',
             channel: 'guild',
             description: 'lets members assign roles to themselves. use the command without arguments to see the usage',
             args: [
@@ -31,18 +31,29 @@ export default class SelfRole extends Command {
                     id: 'all',
                     match: 'flag',
                     flag: 'all'
+                },
+                {
+                    id: 'replace',
+                    match: 'flag',
+                    flag: '-replace'
                 }
             ]
         });
     }
-    async exec(message: Message, { r, set, remove, all }: any) {
+    async exec(message: Message, { r, set, remove, all, replace }: any) {
         
         const roles: Array<string> = await client.settings.get(message.guild?.id!, 'self_assign', null);
         const hasPerms = message.member?.permissions.has('MANAGE_ROLES') ? true : false;
         const failMessage = 'You must have manage roles perms to add self assign roles';
+        const replaceState =  await client.settings.get(message.guild?.id!, 'self_assign-replace', false);
 
         if(all) {
-            return responder.send(message, roles.map(id => resolveRole(message, id)).join(', '));
+            return responder.send(message, !roles || !roles.length ? 'No self assing roles set' : roles.map(id => resolveRole(message, id)).join(', '));
+        }
+
+        if(replace) {
+            await client.settings.set(message.guild?.id!, 'self_assign-replace', replaceState ? false : true);
+            return responder.send(message, `i **${replaceState ? 'wont' : 'will'}** replace the members other self assign roles`)
         }
 
         if(!r) {
@@ -71,7 +82,7 @@ export default class SelfRole extends Command {
                 await client.settings.set(message.guild?.id!, 'self_assign', roles)
             }
 
-            return responder.send(message, `**${role.name}** has been set as a self assign role!`);
+            return responder.send(message, `**${role.name}** has been set as a self assign role!`, {color: role.hexColor});
         }
 
         if(remove) {
@@ -87,12 +98,22 @@ export default class SelfRole extends Command {
             return responder.send(message, `**${role.name}** has been removed as a self assign role!`);
         }
 
+        if(!roles)
+            return responder.fail(message, 'no self assign roles have been set for this server!');
+
         if(!roles.includes(role.id))
             return responder.fail(message, 'that is not a valid self assign role');
         
         const hasRole = message.member?.roles.cache.has(role.id) ? true : false;
         
         !hasRole ? await message.member?.roles.add(role) : await message.member?.roles.remove(role);
+
+        if(replaceState) {
+            for(const m_role of message.member?.roles.cache.array()!) {
+                if(roles.includes(m_role.id) && m_role.id !== role.id)
+                    await message.member?.roles.remove(m_role);
+            }
+        }        
 
         responder.send(message, `**${role.name}** has been ${!hasRole ? 'added to you' : 'removed from you'}`, {color: role.hexColor});
     }

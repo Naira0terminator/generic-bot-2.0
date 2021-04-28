@@ -1,9 +1,9 @@
 import { Command } from 'discord-akairo'; 
-import { Message, GuildMember } from 'discord.js';
+import { Message, GuildMember, MessageAttachment } from 'discord.js';
 import Jimp from 'jimp';
 import imgType from 'jimp/types';
 import Responder from '../../services/responder';
-import { uid, resolveMember } from '../../services/utils';
+import { resolveMember, random } from '../../services/utils';
 
 export default class Color extends Command {
     constructor() {
@@ -52,20 +52,16 @@ export default class Color extends Command {
         
         try {
             new Jimp(255, 255, hexColor, async (err: any, image: imgType) => {
-
                 if(err)
                     return Responder.fail(message, 'Could not generate image try again!');
     
-                const imgID = uid();
-                const imgPath = `../../resources/colorCache/image_${imgID}.png`;
+                const attatchment = new MessageAttachment(await image.getBufferAsync('image/png'), 'img.png');
                 
-                await image.writeAsync(imgPath);
-    
                 await message.channel.send(this.client.util.embed()
                     .setTitle(hexColor)
-                    .attachFiles([imgPath])
-                    .setThumbnail(`attachment://image_${imgID}.png`)
-                    .setColor(hexColor ?? 'RANDOM'))
+                    .attachFiles([attatchment])
+                    .setThumbnail(`attachment://${attatchment.name}`)
+                    .setColor(hexColor));
             });
         } catch(err) {
             Responder.fail(message, 'Could not generate image try again!');

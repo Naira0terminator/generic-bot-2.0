@@ -24,7 +24,7 @@ export default class Avatar extends Command {
             ]
         });
     }
-    async exec(message: Message, { server, member }: { server: string, member: GuildMember}) {
+    async exec(message: Message, { server, member }: { server: string, member: GuildMember }) {
         const url = server ? message.guild?.iconURL({format: 'png', dynamic: true, size: 2048})! : member.user.displayAvatarURL({format: 'png', dynamic: true, size: 2048});
         
         message.channel.send(this.client.util.embed()
