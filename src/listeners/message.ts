@@ -10,7 +10,7 @@ export default class MessageEvent extends Listener {
         });
     }
     async exec(message: Message) {
-        if(message.author.bot)
+        if(message.author.bot || message.channel.type === 'dm')
             return;
 
         const levelingState = client.settings.get(message.guild?.id!, 'leveling-state', true);

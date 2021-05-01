@@ -43,12 +43,12 @@ export default class SelfRole extends Command {
     async exec(message: Message, { r, set, remove, all, replace }: any) {
         
         const roles: Array<string> = await client.settings.get(message.guild?.id!, 'self_assign', null);
-        const hasPerms = message.member?.permissions.has('MANAGE_ROLES') ? true : false;
-        const failMessage = 'You must have manage roles perms to add self assign roles';
-        const replaceState =  await client.settings.get(message.guild?.id!, 'self_assign-replace', false);
+        const hasPerms             = message.member?.permissions.has('MANAGE_ROLES') ? true : false;
+        const failMessage          = 'You must have manage roles perms to add self assign roles';
+        const replaceState         =  await client.settings.get(message.guild?.id!, 'self_assign-replace', false);
 
         if(all) {
-            return responder.send(message, !roles || !roles.length ? 'No self assing roles set' : roles.map(id => resolveRole(message, id)).join(', '));
+            return responder.send(message, !roles || !roles.length ? 'No self assing roles set' : roles.map(id => resolveRole(message, id)).join(' '));
         }
 
         if(replace) {
@@ -62,6 +62,7 @@ export default class SelfRole extends Command {
             **Example** \`.sf epic role\`
             
             use \`all\` as an argument to view all self assign roles
+            and use \`-replace\` to make it replace the members other self assign role when they assign a new one
             
             to set a role as a self assign role use \`-set Role\` and to remove it use \`-remove Role\` (must have manage roles permission)`);
         }   
