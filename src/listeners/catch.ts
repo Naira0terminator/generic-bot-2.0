@@ -21,7 +21,7 @@ export default class catchEvent extends Listener {
         if(!channel || !catchState) 
             return;
 
-        const prefixArray = ['/', '!', '.', '<'];
+        const prefixArray = ['!', '.', '<'];
         const suffixArray = ['get', 'catch', 'gimme', 'mine'];
         const prefix = prefixArray[Math.floor(Math.random() * prefixArray.length)];
         const suffix = suffixArray[Math.floor(Math.random() * suffixArray.length)];

@@ -21,7 +21,7 @@ export default class MemberUpdate extends Listener {
 
         // messages a user when they boost the server
         if(!oldMember.roles.cache.has(boosterRole.id) && newMember.roles.cache.has(boosterRole.id)) {
-            await newMember.send('thank you for boosting!').catch(() => null);
+            await newMember.send(`thank you for boosting, ${newMember.guild.name}! use the \`boost\` command inside the server to create your custom role`).catch(() => null);
         }
 
         // deletes the users booster role and cleans up the db entery

@@ -8,7 +8,7 @@ import { queries } from '../../services/database';
 export default class Booster extends Command {
     constructor() {
         super('boosterRole', {
-            aliases: ['booster-role'],
+            aliases: ['booster-role', 'br'],
             cooldown: 8000,
             clientPermissions: ['SEND_MESSAGES'],
             userPermissions: ['ADMINISTRATOR'],

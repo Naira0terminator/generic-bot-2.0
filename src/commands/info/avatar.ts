@@ -8,7 +8,7 @@ export default class Avatar extends Command {
             cooldown: 8000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
-            description: 'Get the pfp of yourself, another member or the server with `-server`',
+            description: 'Get the pfp of yourself, another member or the server with `server`',
             args: [
                 {
                     id: 'server',

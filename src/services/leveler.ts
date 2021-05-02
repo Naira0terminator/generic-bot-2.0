@@ -42,7 +42,7 @@ export default class Leveler {
 
         setTimeout(() => userCooldown?.delete(message.author.id), cooldown);
 
-        this.handleLevelUp(message);
+        await this.handleLevelUp(message);
     } 
 
     private async handleLevelUp(message: Message) {
