@@ -19,8 +19,9 @@ export default class Responder {
         if(ops ? ops.color : false)
             color = ops.color;
 
-        message.channel.send(new MessageEmbed()
-        .setDescription(response)
-        .setColor(color));
+        message.channel.send({embed: {
+            description: response,
+            color: color,
+        }})
     }
 }

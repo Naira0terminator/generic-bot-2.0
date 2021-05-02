@@ -124,50 +124,30 @@ export default class Leveler {
         }
     }
 
-    async addExp(member: GuildMember, amount?: number): Promise<boolean> {
+    async addExp(member: GuildMember, amount?: number): Promise<string> {
 
         if(!amount)
             amount = Math.floor(Math.random() * (8 - 5) + 5);
 
-        const exp = await redis.zincrby(`guild[${member.guild?.id}]-exp`, amount, member.id);
-
-        if(!exp)
-            return false;
-
-        return true;
+        return await redis.zincrby(`guild[${member.guild?.id}]-exp`, amount, member.id);
     }
 
-    async setExp(member: GuildMember | null, amount: number): Promise<boolean> {
+    async setExp(member: GuildMember | null, amount: number): Promise<string | number | null> {
         if(!member)
-            return false;
+            return null;
 
-        const exp = await redis.zadd(`guild[${member?.guild?.id}]-exp`, amount, member.id)
-
-        if(!exp)
-            return false;
-
-        return true;
+        return await redis.zadd(`guild[${member?.guild?.id}]-exp`, amount, member.id)
     }
 
-    async addLevel(member: GuildMember | null, amount: number): Promise<boolean> {
+    async addLevel(member: GuildMember | null, amount: number): Promise<string | null> {
         if(!member)
-            return false;
+            return null;
 
-        const level = await redis.zincrby(`guild[${member?.guild?.id}]-exp-level`, amount, member.id)
-
-        if(!level)
-            return false;
-
-        return true;
+        return await redis.zincrby(`guild[${member?.guild?.id}]-exp-level`, amount, member.id)
     }
 
-    async setLevel(member: GuildMember, amount: number): Promise<boolean> {
-        const level = await redis.zadd(`guild[${member.guild?.id}]-exp-level`, amount, member.id)
-
-        if(!level)
-            return false;
-
-        return true;
+    async setLevel(member: GuildMember, amount: number): Promise<string | number> {
+        return await redis.zadd(`guild[${member.guild?.id}]-exp-level`, amount, member.id)
     }
 
     async getLevel(member: GuildMember | null): Promise<string> {

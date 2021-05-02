@@ -1,5 +1,6 @@
 import { Command } from 'discord-akairo'; 
 import { Message } from 'discord.js';
+import Responder from '../../services/responder';
 
 export default class Ping extends Command {
     constructor() {
@@ -17,7 +18,7 @@ export default class Ping extends Command {
         const sentTime = sent?.editedAt?.getTime() || sent?.createdAt.getTime();
         const timeDiff = (sentTime ?? 0) - (message.editedAt?.getTime() || message.createdAt?.getTime())
         
-        return message.util?.send(this.client.util.embed()
+        message.util?.send(this.client.util.embed()
         .setDescription(`**Websocket** \`${Math.round(this.client.ws.ping)} MS\`\n**message** \`${timeDiff} MS\``)
         .setColor('RANDOM'));
     }

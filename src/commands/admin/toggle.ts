@@ -7,7 +7,6 @@ export default class Toggle extends Command {
     constructor() {
         super('toggle', {
             aliases: ['command-toggle', 'ct'],
-            cooldown: 0,
             clientPermissions: ['SEND_MESSAGES'],
             userPermissions: 'ADMINISTRATOR',
             channel: 'guild',
