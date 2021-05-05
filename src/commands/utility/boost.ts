@@ -2,16 +2,14 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import responder from '../../services/responder';
 import client from '../../index';
-import { includesOne } from '../../services/utils';
+import { includesOne, resolveRole } from '../../services/utils';
 import { queries } from '../../services/database';
-
-// TODO: add a flag that lets boosters update their booster role.
 
 export default class Boost extends Command {
     constructor() {
         super('boost', {
             aliases: ['boost'],
-            cooldown: 10000,
+            cooldown: 30000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
             description: 'A command for boosters to retrieve their perms',
@@ -21,11 +19,16 @@ export default class Boost extends Command {
                     id: 'details',
                     type: 'string',
                     match: 'separate'
+                },
+                {
+                    id: 'update',
+                    match: 'flag',
+                    flag: '-update'
                 }
             ]
         });
     }
-    async exec(message: Message, { details }: { details: string[]}) {
+    async exec(message: Message, { details, update }: { details: string[], update: string}) {
         
         const isBooster = client.settings.get(message.guild?.id!, queries.settings.boosterRole, null);
         const exists = client.settings.get(message.guild?.id!, queries.settings.MemberBoosterRole(message.author.id), null);
@@ -33,11 +36,17 @@ export default class Boost extends Command {
         if(!message.member?.roles.cache.has(isBooster))
             return responder.fail(message, 'Only boosters can use this command');
         
-        if(exists) 
-            return responder.fail(message, 'You already have a booster role');
+        if(exists && !update) 
+            return responder.fail(message, 'You already have a booster role. if you wish to update it use the command normaly with the `-boost` argument');
 
         if(!details || details.length != 2)
-            return responder.fail(message, `you must provide role name and role color.\nseperate the role name and role color with a comma. the color can also be either a simple color name like blue or a hex color for less basic colors use a hex code.\nExample: \`,boost my booster role, #209CEE\``);
+            return responder.fail(message, `
+            you must provide role name and role color.
+            seperate the role name and role color with a comma. the color can also be either a simple color name like blue or a hex color for less basic colors use a hex code.
+            **Example** \`.boost my booster role, #209CEE\`
+            
+            To update your booster role at any time use the command with \`-boost\` as an argument
+            **Example** \`.boost -update my updated role, red\``);
         
         const boosterRole = message.guild?.roles.cache.get(isBooster);
         if(!boosterRole)
@@ -49,6 +58,19 @@ export default class Boost extends Command {
         else if(!details[1].match(/^#.{6}/))
             return responder.fail(message, 'The provided color must have a valid hex code or be a simple color like blue or red');
         
+
+        if(update) {
+            if(!exists)
+                return responder.fail(message, 'You must first create your booster role to be able to update it');
+
+            const role = resolveRole(message, exists);
+
+            await role?.setName(details[0]);
+            await role?.setColor(details[1]);
+
+            return responder.send(message, 'your custom booster role has been updated!');
+        }
+
         const filter = (message: Message) => includesOne(message.content, ['yes', 'no']);
         const collector = message.channel.createMessageCollector(filter, {time: 35000});
 

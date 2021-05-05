@@ -1,7 +1,7 @@
 import { Command } from 'discord-akairo'; 
 import { Message } from 'discord.js';
 import responder from '../../services/responder';
-import { includesOne, random } from '../../services/utils';
+import { random } from '../../services/utils';
 
 export default class CoinFlip extends Command {
     constructor() {
@@ -21,8 +21,8 @@ export default class CoinFlip extends Command {
     }
     exec(message: Message, { input }: { input: string }) {
 
-        if(!includesOne(input, ['heads', 'h', 'tails', 't']))
-            return responder.fail(message, 'You must input either yes(y) or no(n)');
+        if(!input.match(/^(heads|h)|(tails|t)$/i))
+            return responder.fail(message, 'You must input either Heads (h) or Tails (t)');
 
         switch(input) {
             case 'h':
@@ -32,13 +32,10 @@ export default class CoinFlip extends Command {
                 input = 'tails';
                 break;
         }
-
-        const h_t = ['heads', 'tails'];
-        const result = h_t[random(h_t.length)];
         
-        if(input === result)
-            return responder.send(message, `Correct! you win! its ${result}`);
+        const result = random() === 1 ? 'h' : 't';
         
-        return responder.send(message, `you lose its ${result}`, {color: 'RED'});
+        const response = input === result ? `You win! it was ${result}` : `you lose its ${result}`
+        responder.send(message, response, {color: 'RANDOM'});
     }
 }

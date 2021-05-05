@@ -27,12 +27,12 @@ export default class Load extends Command {
             return responder.fail(message, 'you must provide a valid path');
 
         const path = join(__dirname, '..', cmd);
-        console.log(path);
+        
         try {
             const loaded = client.commandHandler.load(path);
             responder.send(message, `**${loaded.id}** has been loaded`);
         } catch(err) {
-            responder.fail(message, `could not load command`)
+            responder.fail(message, `could not load command, ${err.message}`)
         }
     }
 }
