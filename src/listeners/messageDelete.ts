@@ -11,15 +11,17 @@ export default class MessageDelete extends Listener {
     }
     async exec(message: Message) {
         
+        if(message.partial)
+            await message.fetch();
+
         if(message.author.bot)
             return;
 
-        const reactRole = client.settings.get(message.guild?.id!, `${message.channel.id}_${message.id}-reactRole`, null);
+        const reactRole = client.settings.get(message.guild?.id!, `${message.id}-reactRole`, null);
 
         if(reactRole) 
-            await client.settings.delete(message.guild?.id!, `${message.channel.id}_${message.id}-reactRole`)
+            await client.settings.delete(message.guild?.id!, `${message.id}-reactRole`)
         
-
         client.snipeCache.set(message.channel.id, {
             msg: message,
             author: message.author,

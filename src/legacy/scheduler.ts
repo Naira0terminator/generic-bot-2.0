@@ -1,5 +1,10 @@
 import ns from 'node-schedule';
-import { redis } from './database';
+import { redis } from '../services/database';
+
+// a neat little extension to node schedule that enables presistance using redis as a cache
+// while this does work decently enough the main issue with it is the serialization sucks
+// so it cant properly serialize complex data in the future i might add this back if i give enough of a shit
+// to fix it but for now it remains in the graveyard of useless crappy code.
 
 export default class Scheduler {
     public queue: Map<string, ns.Job>;
@@ -7,7 +12,7 @@ export default class Scheduler {
     constructor() {
         this.queue = new Map();
 
-        //this.load();
+        this.load();
     }
 
     public async set(id: string, time: string, fn: ns.JobCallback) {

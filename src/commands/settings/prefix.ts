@@ -24,31 +24,6 @@ export default class Prefix extends Command {
         });
     }
     async exec(message: Message, { value }: { value: string }) {
-        
-        // Sequelize prefix code
-
-        // const getPrefix = await prefix.findByPk(message.guild?.id);
-
-        // if(!value) {
-        //     return responder.success(message, `Prefix: \`${getPrefix?.get('prefix') ?? config.prefix}\``)
-        // }
-
-        // if(!getPrefix) {
-        //     await prefix.create({
-        //         guild: message.guild?.id,
-        //         prefix: value,
-        //     });
-
-        //     return responder.success(message, `prefix set to \`${value}\``);
-        // }
-
-        // await prefix.update({
-        //     prefix: value
-        // }, {where: {guild: message.guild?.id}});
-
-        // responder.success(message, `Prefix updated to: \`${value}\``);
-
-        // Sequelize provider prefix code
 
         if(!value) {
             const prefix = await client.settings.get(message.guild?.id!, queries.settings.prefix, config.prefix);

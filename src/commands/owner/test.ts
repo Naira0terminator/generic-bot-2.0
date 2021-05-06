@@ -46,21 +46,27 @@ export default class Ping extends Command {
 
         console.log('========= start =========');
 
-        const index: any = {};
-
+        // Data will be stored as so
+        // all values will be snowflake ids 
         // {
         //     "guild": {
         //         "channel": ['msg']
         //     }
         // }
 
+        const index: any = {};
+        
         for(const [id, _] of client.settings.items) {
             
+            // sometimes the data can be something other then a guild id so it checks against that
             if(!id.match(/^\d+$/))
                 continue;
 
             const guildIDS = Object.entries(client.settings.items.get(id))
             for(const [key, _] of guildIDS) {
+
+                // data will always be channelid_messageid-reactRole
+
                 if(!key.endsWith('reactRole'))
                     continue;
                 
@@ -76,36 +82,35 @@ export default class Ping extends Command {
                 index[id][channelID].push(messageID);
             }
         }
+        console.log(index);
 
-        //console.log(index);
+    //    const entries = Object.entries(index);
 
-       const entries = Object.entries(index);
+    //    for(const [key, value] of entries) {
+    //         const guild = client.guilds.cache.get(key);
 
-       for(const [key, value] of entries) {
-            const guild = client.guilds.cache.get(key);
+    //         if(!guild)
+    //             continue;
 
-            if(!guild)
-                continue;
+    //         const cache = [];
 
-            const cache = [];
-
-            for(const [channelID, msgs] of Object.entries(value as any)) {
-                const channel = guild.channels.cache.get(channelID) as TextChannel;
+    //         for(const [channelID, msgs] of Object.entries(value as any)) {
+    //             const channel = guild.channels.cache.get(channelID) as TextChannel;
                 
-                if(!channel)
-                    continue;
+    //             if(!channel)
+    //                 continue;
 
-                for(const id of msgs as Array<string>) {
-                    const msg = await channel.messages.fetch(id);
+    //             for(const id of msgs as Array<string>) {
+    //                 const msg = await channel.messages.fetch(id, true);
 
-                    if(!msg)
-                        continue;
-                        
-                    cache.push(msg.content);
-                }
-                console.log(channel.name);
-            }
-            console.log(cache);
-       }
+    //                 if(!msg)
+    //                     continue;
+
+    //                 cache.push(msg.content);
+    //             }
+    //             console.log(channel.name);
+    //         }
+    //         console.log(cache);
+    //    }
     }
 }

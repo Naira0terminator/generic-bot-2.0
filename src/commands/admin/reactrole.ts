@@ -68,11 +68,13 @@ export default class ReactRole extends Command {
             return responder.fail(message, 'You must provide a valid message id and arguments. **Example** `.rr 839522197228093460 | ✅ yes | ❎ no`');
 
         let arr: Array<any> = [];
+        // main reason i cached it here instead of resolving it again at the end is so it wouldnt pointlessly have to retrieve it all over again
+        let displayCache = [];
 
         for(let element of args) {
             const split = element.trim().split(' ');
 
-            const emote = split[0].match(unicode) ? split[0] : client.emojis.cache.get(split[0].slice(split[0].indexOf(':', 2) + 1, -1));
+            const emote: any = split[0].match(unicode) ? split[0] : client.emojis.cache.get(split[0].slice(split[0].indexOf(':', 2) + 1, -1));
         
             if(!emote)
                 return responder.fail(message, `Could not resolve the given emote **${split[0]}** perhaps its invalid!`);
@@ -83,12 +85,13 @@ export default class ReactRole extends Command {
             if(!role)
                 return responder.fail(message, `**${resolvable}** is not a valid role`);
 
-            arr.push({emote: emote, role: role});
+            arr.push({emote: emote.id ?? emote , role: role.id});
+            displayCache.push({emote: emote, role: role});
         }
 
         for(const data of arr) {
             if(!msg.reactions.cache.has(data.emote.id))
-                msg.react(data.emote);
+                await msg.react(data.emote);
         }
         
         const data = {
@@ -97,11 +100,11 @@ export default class ReactRole extends Command {
             replace: replace ? true : false,
         }
         
-        await client.settings.set(message.guild?.id!, `${msg.channel.id}_${msg.id}-reactRole`, data);
+        await client.settings.set(message.guild?.id!, `${msg.id}-reactRole`, data);
 
         responder.send(message, `
         **Reaction role set to** [message](${msg.url})
         
-        ${arr.map((element: any) => `${element.emote} ${element.role}`).join('\n')}`);
+        ${displayCache.map((element: any) => `${element.emote} ${element.role}`).join('\n')}`);
     }
 }

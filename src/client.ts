@@ -9,7 +9,7 @@ import { Sequelize } from 'sequelize/types';
 import Settings from './models/settings';
 import { join } from 'path';
 import PG from 'pg';
-import Scheduler from './services/scheduler';
+import Scheduler from './legacy/scheduler';
 
 export default class Client extends AkairoClient {
     commandHandler: CommandHandler;
@@ -25,7 +25,7 @@ export default class Client extends AkairoClient {
     scheduler: Scheduler;
 
     constructor() {
-        super({ownerID: config.ownerID,} , {disableMentions: 'everyone'})
+        super({ownerID: config.ownerID,} , {disableMentions: 'everyone', partials: ['CHANNEL', 'MESSAGE', 'REACTION', 'USER']})
 
         this.commandHandler = new CommandHandler(this, {
             directory: join(__dirname + '/commands/'),
