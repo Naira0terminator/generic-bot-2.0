@@ -2,6 +2,7 @@ import { Listener } from 'discord-akairo';
 import { sequelize } from '../../services/database';
 import client from '../../index';
 import { init_psql } from '../../services/database';
+import { TextChannel } from 'discord.js';
 
 export default class ReadyEvent extends Listener{
     constructor() {
