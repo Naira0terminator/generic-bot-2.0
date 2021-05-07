@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo'; 
-import { Message } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import { googleKey } from '../../config.json';
 import fetch from 'node-superfetch';
 
@@ -37,10 +37,9 @@ export default class Img extends Command {
             cx: '000606063932237113240:q-nv8rtizca',
         });
 
-        let item = 0;
-        let client = this.client;
-        let forward = '➡️'
-        let backward = '⬅️'
+        let   item     = 0;
+        const forward  = '➡️'
+        const backward = '⬅️'
 
         const msg = await message.channel.send(constructEmbed(item));
         await msg.react(backward);
@@ -68,11 +67,11 @@ export default class Img extends Command {
 
         function constructEmbed(item: number) {
             const data = body.items[item];
-            const embed = client.util.embed()
-            .setTitle(data.title)
-            .setDescription(`[Link](${data.link})`)
-            .setImage(data.link)
-            .setColor('RANDOM')
+            const embed = new MessageEmbed()
+                .setTitle(data.title)
+                .setDescription(`[Link](${data.link})`)
+                .setImage(data.link)
+                .setColor('RANDOM');
             return embed;
         }
     }

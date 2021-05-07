@@ -58,7 +58,6 @@ export default class ReactRole extends Command {
             if(!data)
                 return responder.fail(message, 'no reaction roles setup for that message');
 
-            await data.msg.reactions.removeAll();
             await client.settings.delete(message.guild?.id!, `${msg.id}-reactRole`);
 
             return responder.send(message, 'Reaction roles for that message have been removed');
@@ -67,7 +66,7 @@ export default class ReactRole extends Command {
         if(!msg || !args)
             return responder.fail(message, 'You must provide a valid message id and arguments. **Example** `.rr 839522197228093460 | ✅ yes | ❎ no`');
 
-        let arr: Array<any> = [];
+        let obj: any = {};
         // main reason i cached it here instead of resolving it again at the end is so it wouldnt pointlessly have to retrieve it all over again
         let displayCache = [];
 
@@ -85,18 +84,18 @@ export default class ReactRole extends Command {
             if(!role)
                 return responder.fail(message, `**${resolvable}** is not a valid role`);
 
-            arr.push({emote: emote.id ?? emote , role: role.id});
+            
+            obj[emote.id ?? emote] = role.id;
             displayCache.push({emote: emote, role: role});
         }
 
-        for(const data of arr) {
+        for(const data of displayCache) {
             if(!msg.reactions.cache.has(data.emote.id))
                 await msg.react(data.emote);
         }
         
         const data = {
-            msg: msg,
-            data: arr,
+            data: obj,
             replace: replace ? true : false,
         }
         

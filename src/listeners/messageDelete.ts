@@ -11,8 +11,12 @@ export default class MessageDelete extends Listener {
     }
     async exec(message: Message) {
         
-        if(message.partial)
-            await message.fetch();
+        // catches unknown message errors
+        if(message.partial) {
+            const msg = await message.fetch().catch(() => null);
+            if(!msg)
+                return;
+        }
 
         if(message.author.bot)
             return;

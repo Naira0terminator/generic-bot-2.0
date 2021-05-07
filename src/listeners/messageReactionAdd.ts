@@ -27,42 +27,24 @@ export default class MessageReactionAdd extends Listener {
 
             const member = reaction.message.guild?.members.cache.get(user.id);
 
-            for(const data of reactRole.data) {
-                const emote = client.emojis.cache.get(data.emote) ?? data.emote;
+            if(reactRole.data[reaction.emoji.id!] ?? reactRole.data[reaction.emoji.name]) {
+                const role = member?.guild.roles.cache.get(reactRole.data[reaction.emoji.id!] ?? reactRole.data[reaction.emoji.name]);
                 
-                if(!emote)
-                    continue;
+                if(!role)
+                    return;
                 
-                if((emote.name ?? emote) === reaction.emoji.name) {
-                    
-                    const role = member?.guild.roles.cache.get(data.role);
+                member?.roles.cache.has(role.id) ? 
+                await member?.roles.remove(role) : await member?.roles.add(role);
 
-                    if(!role)
-                        continue;
-
-                    member?.roles.cache.has(role.id) ? 
-                    await member?.roles.remove(role) : await member?.roles.add(role);
-
-                    await reaction.users.remove(user.id);
-                    
-                    if(reactRole.replace) {
-                        for(const d of reactRole.data) {
-                            
-                            const resolve = member?.guild.roles.cache.get(d.role);
-
-                            if(!resolve)
-                                continue;
-
-                            if(member?.roles.cache.has(resolve.id) && resolve.id !== role.id)
-                                await member.roles.remove(resolve);
-                        }
+                
+                if(reactRole.replace) {
+                    for(const id of Object.values(reactRole.data)) {
+                        if(member?.roles.cache.has(id as string) && id !== role.id)
+                            await member.roles.remove(id as string);
                     }
-
-                    break;
-                } 
-                else 
-                    await reaction.users.remove(user.id);
-            }
+                }
+            } 
+            await reaction.users.remove(user.id);
         }
     }
 }
