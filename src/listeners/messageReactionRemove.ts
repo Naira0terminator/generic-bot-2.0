@@ -20,12 +20,11 @@ export default class MessageReactionRemove extends Listener {
 
         const reactRole = client.settings.get(reaction.message.guild?.id!, `${reaction.message.id}-reactRole`, null);
 
+        // adds reactions back if the reaction message had reaction roles setup to it
         if(reactRole) {
-            for(const emote of Object.keys(reactRole.data)) {
-                if(!reaction.message.reactions.cache.has(emote) || !reaction.message.reactions.cache.find(e => e.emoji.name === emote)) {
-                    await reaction.message.react(emote);
-                }
-            }
+            const emote = reaction.emoji.id! ?? reaction.emoji.name;
+            if(emote in reactRole.data)
+                await reaction.message.react(emote);
         }
     }
 }

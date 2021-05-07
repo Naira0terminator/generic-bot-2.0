@@ -27,8 +27,9 @@ export default class MessageReactionAdd extends Listener {
 
             const member = reaction.message.guild?.members.cache.get(user.id);
 
-            if(reactRole.data[reaction.emoji.id!] ?? reactRole.data[reaction.emoji.name]) {
-                const role = member?.guild.roles.cache.get(reactRole.data[reaction.emoji.id!] ?? reactRole.data[reaction.emoji.name]);
+            const emote = reaction.emoji.id! ?? reaction.emoji.name;
+            if(reactRole.data[emote]) {
+                const role = member?.guild.roles.cache.get(reactRole.data[emote]);
                 
                 if(!role)
                     return;

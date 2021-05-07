@@ -12,7 +12,7 @@ export default class ReactRole extends Command {
             clientPermissions: ['SEND_MESSAGES', 'MANAGE_ROLES'],
             userPermissions: 'MANAGE_ROLES',
             channel: 'guild',
-            description: 'Allows you to set react roles',
+            description: 'Allows you to set react roles. use the command without arguments to check the usage',
             separator: '|',
             args: [
                 {
@@ -63,8 +63,23 @@ export default class ReactRole extends Command {
             return responder.send(message, 'Reaction roles for that message have been removed');
         }
 
-        if(!msg || !args)
-            return responder.fail(message, 'You must provide a valid message id and arguments. **Example** `.rr 839522197228093460 | ✅ yes | ❎ no`');
+        if(!msg || !args) {
+            return responder.send(message, `
+            to set reaction roles on a message you must provide a message id and emotes and roles
+
+            **Example** \`.rr 840209542692470825 | ✅ yes | ❎ no\`
+
+            this will give the member a role called yes if they reacted with ✅ or a role called no if they reacted with ❎
+            all arguments must be seperated with a \`|\`
+            
+            to get message ids you must enable developer mode check this guide here
+            [guide on enabling developer](https://github.com/Naira0terminator/generic-bot-2.0/wiki/Enabling-developer-mode)
+            
+            **Options**
+            \`-check\` message id | checks if the provided message id has reaction roles set to it
+            \`-remove\` message id | removes the reaction roles from the given message id
+            \`-replace\` | when setting up reaction roles if you use this option anywhere in the command it will replace any other roles they have from that reaction role`);
+        }
 
         let obj: any = {};
         // main reason i cached it here instead of resolving it again at the end is so it wouldnt pointlessly have to retrieve it all over again
@@ -73,22 +88,25 @@ export default class ReactRole extends Command {
         for(let element of args) {
             const split = element.trim().split(' ');
 
+            // if given a unicode emoji it will just use the raw argument if given a custom emoji it will parse the id from it and retrieve it from the cache
             const emote: any = split[0].match(unicode) ? split[0] : client.emojis.cache.get(split[0].slice(split[0].indexOf(':', 2) + 1, -1));
         
             if(!emote)
                 return responder.fail(message, `Could not resolve the given emote **${split[0]}** perhaps its invalid!`);
 
+            // gets the rest of the args to resolve the role for spaced roles
             const resolvable = split.slice(1).join(' ');
             const role = resolveRole(message, resolvable);
             
             if(!role)
                 return responder.fail(message, `**${resolvable}** is not a valid role`);
 
-            
             obj[emote.id ?? emote] = role.id;
             displayCache.push({emote: emote, role: role});
         }
 
+        // makes sure to react with the corrent roles if it does not already exist on the message
+        // this can potentially mess up the order but thats fine
         for(const data of displayCache) {
             if(!msg.reactions.cache.has(data.emote.id))
                 await msg.react(data.emote);
