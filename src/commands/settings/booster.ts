@@ -11,7 +11,7 @@ export default class Booster extends Command {
             aliases: ['booster-role', 'br'],
             cooldown: 8000,
             clientPermissions: ['SEND_MESSAGES'],
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             channel: 'guild',
             description: '',
             args: [

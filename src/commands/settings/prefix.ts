@@ -12,7 +12,7 @@ export default class Prefix extends Command {
             aliases: ['prefix'],
             cooldown: 10000,
             clientPermissions: ['SEND_MESSAGES'],
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             channel: 'guild',
             description: 'Set a new prefix for the guild or view the current one',
             args: [

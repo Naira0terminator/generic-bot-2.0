@@ -10,7 +10,7 @@ export default class Name extends Command {
             aliases: ['level-role', 'lrole'],
             channel: 'guild',
             lock: 'guild',
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             args: [
                 {
                     id: 'level',

@@ -62,10 +62,44 @@ export const varParser = (str: any, member: GuildMember) => {
         "{serverAvatar}": member.guild.iconURL({dynamic: true, size: 2048}),
     }
 
-    for(const [key, value] of Object.entries(variables))
-        parsed = parsed.replace(new RegExp(key, 'g'), String(value));
+    for(const key in variables)
+        parsed = parsed.replace(new RegExp(key, 'g'), String(variables[key]));
 
     return parsed;
+}
+
+export const varParseObj = (obj: any, member: GuildMember) => {
+    for(const [key, value] of Object.entries(obj)) {
+        if(typeof obj[key] === 'object' && !Array.isArray(obj[key]) && obj[key]) {
+            for(const [k, v] of Object.entries(obj[key]))
+            obj[key][k] = varParser(v, member);
+
+            continue;
+        }
+
+        obj[key] = varParser(value, member);
+    }
+}
+
+// small class for benchmarking
+export class Timer {
+    private start: [number, number]
+
+    constructor() {
+        this.start = process.hrtime()
+    }
+
+    // returns time since start as ms
+    public elapsed() {
+        const end = process.hrtime(this.start);
+        return (end[0]* 1000000000 + end[1]) / 1000000
+    }
+
+    // prints elapsed time
+    public print() {
+        console.log(`Time: ${this.elapsed()}`)
+    }
+    
 }
 
 // a unicode regex

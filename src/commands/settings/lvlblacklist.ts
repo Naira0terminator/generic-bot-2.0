@@ -10,7 +10,7 @@ export default class LvlBlacklist extends Command {
             aliases: ['level-blacklist', 'lblacklist', 'lbl'],
             cooldown: 8000,
             clientPermissions: ['SEND_MESSAGES'],
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             channel: 'guild',
             description: 'Sets role and channel blacklists',
             args: [

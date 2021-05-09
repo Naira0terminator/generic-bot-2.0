@@ -2,7 +2,7 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import client from '../..';
 import Responder from '../../services/responder';
-import { varParser } from '../../services/utils';
+import { varParseObj, varParser } from '../../services/utils';
 
 export default class Embed extends Command {
     constructor() {
@@ -81,16 +81,7 @@ export default class Embed extends Command {
             const {...data} = getData;
 
             // parses all variables in the object 
-            for(const [key, value] of Object.entries(data)) {
-                if(typeof data[key] === 'object' && !Array.isArray(data[key]) && data[key]) {
-                    for(const [k, v] of Object.entries(data[key]))
-                        data[key][k] = varParser(v, message.member!);
-
-                    continue;
-                }
-
-                data[key] = varParser(value, message.member!);
-            }
+           varParseObj(data, message.member!);
 
             return message.channel.send({embed: data});
         }
@@ -137,13 +128,15 @@ export default class Embed extends Command {
             }
         }
 
-        const arr = raw.trim().split(/",?\s*/gi).filter((v, i) => v !== '');
+        const arr = raw.trim().split(/\|\s*/gi).filter((v, i) => v !== '');
+        console.log(arr);
 
         let saved = {
             saved: false,
             id: '',
         };
 
+        // if a url is a variable it will throw an error fix in future
         for(const element of arr) {
             let key = element.slice(0, element.indexOf(':')).toLowerCase().trim();
             let value = element.slice(element.indexOf(':') + 1).trim();

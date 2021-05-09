@@ -17,7 +17,7 @@ export default class MessageReactionAdd extends Listener {
             await reaction.message.fetch();
         if(user.partial)
             await user.fetch();
-
+        
         if(user.bot)
             return;
 
@@ -36,12 +36,12 @@ export default class MessageReactionAdd extends Listener {
                 
                 member?.roles.cache.has(role.id) ? 
                 await member?.roles.remove(role) : await member?.roles.add(role);
-
                 
                 if(reactRole.replace) {
-                    for(const id of Object.values(reactRole.data)) {
-                        if(member?.roles.cache.has(id as string) && id !== role.id)
-                            await member.roles.remove(id as string);
+                    const data = reactRole.data;
+                    for(const key in data) {
+                        if(member?.roles.cache.has(data[key]) && data[key] !== role.id)
+                            await member.roles.remove(data[key]);
                     }
                 }
             } 

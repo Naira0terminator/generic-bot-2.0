@@ -21,6 +21,7 @@ export default class Client extends AkairoClient {
     leveler: Leveler;
     settings: SequelizeProvider;
     snipeCache: Map<string, any>;
+    newMemberCache: Map<string, any>;
     sql: PG.Client;
     scheduler: Scheduler;
 
@@ -57,13 +58,14 @@ export default class Client extends AkairoClient {
             listenerHandler: this.listenerHandler
         });
 
-        this.responder = Responder;
-        this.redis = redis;
-        this.sequelize = sequelize;
-        this.leveler = new Leveler();
-        this.snipeCache = new Map();
-        this.sql = sql;
-        this.scheduler = new Scheduler();
+        this.responder      = Responder;
+        this.redis          = redis;
+        this.sequelize      = sequelize;
+        this.sql            = sql;
+        this.leveler        = new Leveler();
+        this.snipeCache     = new Map();
+        this.newMemberCache = new Map();
+        this.scheduler      = new Scheduler();
 
         this.settings = new SequelizeProvider(Settings, {
             idColumn: 'guildID',

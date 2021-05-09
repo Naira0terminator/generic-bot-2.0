@@ -10,7 +10,7 @@ export default class CleanChannel extends Command {
             aliases: ['clean-channel', 'ch'],
             cooldown: 8000,
             clientPermissions: ['SEND_MESSAGES'],
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             channel: 'guild',
             description: 'Sets a channel as a clean channel which will delete every new none bot messages in that channel\n use `-all` to view all & `-reset` to reset all',
             args: [

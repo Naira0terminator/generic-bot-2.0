@@ -4,11 +4,13 @@ import responder from '../../services/responder';
 import client from '../../index';
 import { resolveMember, resolveChannel } from '../../services/utils';
 
+// implement option to make it so you can change the spawn chance
+
 export default class catchSettings extends Command {
     constructor() {
         super('catchsettings', {
             aliases: ['catch-setting', 'catch-set'],
-            userPermissions: ['ADMINISTRATOR'],
+            userPermissions: ['MANAGE_GUILD'],
             cooldown: 60000,
             channel: 'guild',
             description: {
