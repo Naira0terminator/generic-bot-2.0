@@ -77,11 +77,8 @@ export default class Embed extends Command {
             if(!getData)
                 return Responder.fail(message, 'could not retrieve embed');
 
-            // clones the object so the data doesnt get mutated. also it doestn directly try to destructure the data to avoid errors if its null.
-            const {...data} = getData;
-
-            // parses all variables in the object 
-           varParseObj(data, message.member!);
+            Object.freeze(getData);
+            let data = varParseObj(getData, message.member!);
 
             return message.channel.send({embed: data});
         }
@@ -129,8 +126,7 @@ export default class Embed extends Command {
         }
 
         const arr = raw.trim().split(/\|\s*/gi).filter((v, i) => v !== '');
-        console.log(arr);
-
+        
         let saved = {
             saved: false,
             id: '',

@@ -9,7 +9,18 @@ export default class MessageUpdate extends Listener {
             event: 'messageUpdate',
         });
     }
-    exec(oldMsg: Message, newMsg: Message) {
+    async exec(oldMsg: Message, newMsg: Message) {
+
+        if(oldMsg.author.partial)
+            await oldMsg.author.fetch();
+        if(oldMsg.partial)
+            await oldMsg.fetch();
+
+        if(newMsg.author.partial)
+            await newMsg.author.fetch();
+        if(newMsg.partial)
+            await newMsg.fetch();
+
         if(oldMsg.author.bot)
             return;
 

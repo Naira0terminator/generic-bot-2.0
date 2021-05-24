@@ -7,7 +7,7 @@ export default class Topic extends Command {
     constructor() {
         super('topic', {
             aliases: ['topic'],
-            cooldown: 8000,
+            cooldown: 10000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
             description: 'Returns a random conversation topic from [Conversation starters](https://www.conversationstarters.com/generator.php)',

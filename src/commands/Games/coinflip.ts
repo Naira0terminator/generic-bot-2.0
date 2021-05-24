@@ -33,7 +33,7 @@ export default class CoinFlip extends Command {
                 break;
         }
         
-        const result = random() === 1 ? 'h' : 't';
+        const result = random() === 1 ? 'heads' : 'tails';
         
         const response = input === result ? `You win! it was ${result}` : `you lose its ${result}`
         responder.send(message, response, {color: 'RANDOM'});

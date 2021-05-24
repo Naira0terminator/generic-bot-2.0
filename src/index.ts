@@ -8,16 +8,14 @@ export default client;
 
 
 /** TODO
- * moderation           []
- * logging              []
- * pet system           []
- * economy              []
- * gambling             []
- * music player         []
- * statistics           []
- * invite log           []
- * react roles          []
- * auto roles           [*]
- * self assign roles    [*]
- * fishing system       []
+ * music player         
+ * moderation           
+ * logging  
+ * invite log           
+ * economy 
+ * gambling 
+ * fishing system  
+ * pet system   
+ * statistics           
  */
+

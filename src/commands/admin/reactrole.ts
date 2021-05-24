@@ -87,17 +87,27 @@ export default class ReactRole extends Command {
 
         for(let element of args) {
             const split = element.trim().split(' ');
-
             // if given a unicode emoji it will just use the raw argument if given a custom emoji it will parse the id from it and retrieve it from the cache
-            const emote: any = split[0].match(unicode) ? split[0] : client.emojis.cache.get(split[0].slice(split[0].indexOf(':', 2) + 1, -1));
-        
+            let emote: any;
+            
+            // its a bit messy but you know what it works and idc enough to create a cleaner version
+            if(split[0].match(/^<:.+:\d+>$/i))
+                emote = client.emojis.cache.get(split[0].slice(split[0].indexOf(':', 2) + 1, -1));
+            else if(split[0].match(/^<a:.+:\d+>$/i)) {
+                emote = client.emojis.cache.get(split[0].slice(split[0].indexOf(':', 3) + 1, -1));
+            }
+            else if(split[0].match(unicode))
+                emote = split[0];
+            else 
+                emote = client.emojis.cache.get(split[0]);
+
             if(!emote)
                 return responder.fail(message, `Could not resolve the given emote **${split[0]}** perhaps its invalid!`);
 
             // gets the rest of the args to resolve the role for spaced roles
-            const resolvable = split.slice(1).join(' ');
-            const role = resolveRole(message, resolvable);
-            
+            const resolvable = split.slice(1).join(' ').trim();
+            const role = message.guild?.roles.cache.get(resolvable) || message.guild?.roles.cache.find(rl => rl.name.toLowerCase() === resolvable.toLowerCase());
+
             if(!role)
                 return responder.fail(message, `**${resolvable}** is not a valid role`);
 

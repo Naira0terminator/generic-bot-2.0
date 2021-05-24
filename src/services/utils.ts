@@ -63,22 +63,29 @@ export const varParser = (str: any, member: GuildMember) => {
     }
 
     for(const key in variables)
-        parsed = parsed.replace(new RegExp(key, 'g'), String(variables[key]));
+        parsed = parsed.replace(new RegExp(key, 'g'), variables[key] as string);
 
     return parsed;
 }
 
 export const varParseObj = (obj: any, member: GuildMember) => {
-    for(const [key, value] of Object.entries(obj)) {
-        if(typeof obj[key] === 'object' && !Array.isArray(obj[key]) && obj[key]) {
-            for(const [k, v] of Object.entries(obj[key]))
-            obj[key][k] = varParser(v, member);
+
+    const data: any = {...obj};
+
+    for(const [key, value] of Object.entries(data)) {
+
+        if(typeof data[key] === 'object' && !Array.isArray(data[key]) && data[key]) {
+
+            for(const [k, v] of Object.entries(data[key]))
+                data[key][k] = varParser(v, member);
 
             continue;
         }
 
-        obj[key] = varParser(value, member);
+        data[key] = varParser(value, member);
     }
+
+    return data;
 }
 
 // small class for benchmarking

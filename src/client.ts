@@ -9,7 +9,7 @@ import { Sequelize } from 'sequelize/types';
 import Settings from './models/settings';
 import { join } from 'path';
 import PG from 'pg';
-import Scheduler from './legacy/scheduler';
+import Scheduler from './services/scheduler';
 
 export default class Client extends AkairoClient {
     commandHandler: CommandHandler;

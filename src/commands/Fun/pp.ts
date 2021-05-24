@@ -6,7 +6,7 @@ export default class PP extends Command {
     constructor() {
         super('pp', {
             aliases: ['penis', 'pp'],
-            cooldown: 0,
+            cooldown: 8000,
             clientPermissions: ['SEND_MESSAGES'],
             channel: 'guild',
             description: 'Generates a totally accurate penis',

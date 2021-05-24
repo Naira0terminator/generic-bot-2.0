@@ -2,6 +2,7 @@ import { Command } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
 import { googleKey } from '../../config.json';
 import fetch from 'node-superfetch';
+import Responder from '../../services/responder';
 
 export default class Img extends Command {
     constructor() {
@@ -36,6 +37,9 @@ export default class Img extends Command {
             key: googleKey,
             cx: '000606063932237113240:q-nv8rtizca',
         });
+
+        if(!body)
+            return Responder.fail(message, 'Could not find any search results.');
 
         let   item     = 0;
         const forward  = '➡️'

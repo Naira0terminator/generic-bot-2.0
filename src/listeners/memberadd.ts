@@ -28,11 +28,14 @@ export default class MemberAdd extends Listener {
             if(!channel)
                 return;
 
+            let content: any;
             if(typeof welcomeData.content === 'object') {
-                varParseObj(welcomeData.content, member);
+                content = varParseObj(welcomeData.content, member);
+            } else {
+                content = varParser(welcomeData.content, member);
             }
 
-            const msg = await channel.send(typeof welcomeData.content === 'object' ? {embed: welcomeData.content} : varParser(welcomeData.content, member));
+            const msg = await channel.send(typeof welcomeData.content === 'object' ? {embed: content} : content);
             
             client.newMemberCache.set(member?.id, {
                 msg: msg.id,
