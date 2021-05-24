@@ -7,8 +7,8 @@
 ## current features
 
 * highly customizable leveling system
-* reaction role system
-* self assing roles
+* reaction roles
+* self assign roles
 * a powerful and easy to use embed builder with vairable support
 * many useful commands such as an image search and a translation command to name a few
 * fun commands like a snipe command and interaction commands
