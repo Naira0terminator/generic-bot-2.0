@@ -2,7 +2,7 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import responder from '../../services/responder';
 import client from '../../index';
-import { resolveRole, unicode } from '../../services/utils';
+import { unicode } from '../../services/utils';
 
 export default class ReactRole extends Command {
     constructor() {
@@ -84,7 +84,7 @@ export default class ReactRole extends Command {
         let obj: any = {};
         // main reason i cached it here instead of resolving it again at the end is so it wouldnt pointlessly have to retrieve it all over again
         let displayCache = [];
-
+        
         for(let element of args) {
             const split = element.trim().split(' ');
             // if given a unicode emoji it will just use the raw argument if given a custom emoji it will parse the id from it and retrieve it from the cache
@@ -106,7 +106,11 @@ export default class ReactRole extends Command {
 
             // gets the rest of the args to resolve the role for spaced roles
             const resolvable = split.slice(1).join(' ').trim();
-            const role = message.guild?.roles.cache.get(resolvable) || message.guild?.roles.cache.find(rl => rl.name.toLowerCase() === resolvable.toLowerCase());
+
+            const role = 
+            message.guild?.roles.cache.get(resolvable) || 
+            message.guild?.roles.cache.find(r => r.name.toLowerCase() === resolvable.toLowerCase()) ||
+            message.guild?.roles.cache.find(r => r.id === split[1].slice(split[1].indexOf('&') + 1, -1));
 
             if(!role)
                 return responder.fail(message, `**${resolvable}** is not a valid role`);

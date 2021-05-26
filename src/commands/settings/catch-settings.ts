@@ -38,11 +38,38 @@ export default class catchSettings extends Command {
                 },
                 {
                     id: 'value',
+                },
+                {
+                    id: 'add',
+                    match: 'flag',
+                    flag: '-add'
                 }
             ],
         });
     }
-    async exec(message: Message, { toggle, clear, arg }: any) {
+    async exec(message: Message, { toggle, clear, arg, add, value, set }: any) {
+
+        if(add) {
+            const member = resolveMember(message, arg);
+
+            if(!member)
+                return responder.fail(message, 'that is not a valid member');
+
+            await client.redis.zincrby(`guild[${message.guild?.id}]-catch`, value, member.id);
+
+            return responder.send(message, `added **${value}**`)
+        }
+
+        if(set) {
+            const member = resolveMember(message, arg);
+
+            if(!member)
+                return responder.fail(message, 'that is not a valid member');
+
+            await client.redis.zadd(`guild[${message.guild?.id}]-catch`, value, member.id);
+
+            return responder.send(message, `added **${value}**`)
+        }
 
         if(toggle) {
             let data = client.settings.get(message.guild?.id!, `catchState`, false);

@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import client from '../index';
 import { random } from '../services/utils';
 
@@ -17,7 +17,7 @@ export default class catchEvent extends Listener {
 
         const guildCatchData    = client.settings.get(message.guild?.id!, `catchChannel`, null);
         const catchState        = client.settings.get(message.guild?.id!, `catchState`, null);
-        const channel           = message.guild?.channels.cache.get(guildCatchData!);
+        const channel           = message.guild?.channels.cache.get(guildCatchData!) as TextChannel;
 
         if(!channel || !catchState) 
             return;
@@ -35,7 +35,7 @@ export default class catchEvent extends Listener {
             const filter = (message: Message) => message.content.toLowerCase() === catchWord && !message.member?.user.bot; 
             const collector = message.channel.createMessageCollector(filter, { time: 10000});
 
-            message.channel.send(`🐱 | a wild cat appears catch it with \`${catchWord}\``).then(m => m.delete({timeout: 10000}));
+            const msg = await message.channel.send(`🐱 | a wild cat appears catch it with \`${catchWord}\``);
 
             let isCaught = false;
 
@@ -49,13 +49,13 @@ export default class catchEvent extends Listener {
                 const amount = await client.redis.zincrby(`guild[${message.guild?.id}]-catch`, 1, message.author.id);
                 await client.leveler.addExp(message.member!);
 
-                message.channel.send(`caught by **${message.author.tag}**. total cats: \`${amount}\``).then((m: Message) => m.delete({timeout: 5000}));
+                await msg.edit(`caught by **${message.author.tag}**. total cats: \`${amount}\``)
             });
 
-            collector.once('end', (collected) => {
+            collector.once('end', async (collected) => {
                 
-                for(const [_, msg] of collected)
-                    msg.delete();
+                await msg.delete();
+                await channel.bulkDelete(collected);
 
                 if(!isCaught)
                     message.channel.send('no one caught it in time!').then(m => m.delete({timeout: 5000}));
