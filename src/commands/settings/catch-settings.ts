@@ -74,7 +74,13 @@ export default class catchSettings extends Command {
         if(toggle) {
             let data = client.settings.get(message.guild?.id!, `catchState`, false);
 
-            data ? client.settings.set(message.guild?.id!, `catchState`, false) : client.settings.set(message.guild?.id!, `catchState`, true)
+            if(data) {
+                await client.settings.set(message.guild?.id!, `catchState`, false);
+                data = false;
+            } else {
+                await client.settings.set(message.guild?.id!, `catchState`, true);
+                data = true;
+            }
             
             return responder.send(message, `catch has been set to: \`${data ? 'Enabled' : 'Disabled'}\``);
         }
