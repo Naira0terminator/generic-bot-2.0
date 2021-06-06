@@ -32,7 +32,7 @@ export default class Snipe extends Command {
             .setAuthor(cache.author.username, cache.author.displayAvatarURL())
             .setColor('RANDOM')
             .setDescription(e ? `**before**: ${cache.old}\n**after**: ${cache.new}` : cache.msg.content)
-            .setFooter(e ? '' : `Deleted ${moment(cache.msg.createdAt).fromNow()}`);
+            .setFooter(e ? '' : `Sent ${moment(cache.msg.createdAt).fromNow()}`);
 
         if(!e && cache.attatchments)
             embed.setImage(cache.attatchments);

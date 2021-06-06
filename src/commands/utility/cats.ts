@@ -31,7 +31,7 @@ export default class Cats extends Command {
             return await leaderboard('catch', message);
 
         const data = await client.redis.zscore(`guild[${message.guild?.id}]-catch`, `${member.id}`);
-        const rank = await client.redis.zrank(`guild[${message.guild?.id}]-catch`, `${member.id}`);
+        const rank = await client.redis.zrevrank(`guild[${message.guild?.id}]-catch`, `${member.id}`);
 
         message.channel.send(this.client.util.embed()
         .setAuthor(member.user.username, member.user.displayAvatarURL())

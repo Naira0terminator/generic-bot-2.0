@@ -21,6 +21,7 @@ export async function init_psql() {
 
     try {
         await sql.query('CREATE TABLE IF NOT EXISTS marriage(guild TEXT, couple TEXT [], date TEXT)');
+        await sql.query('CREATE TABLE IF NOT EXISTS partnerships(member_id TEXT UNIQUE, count INT, weekly INT)');
     } catch(err) {
         console.log(`Error creating one or more postgres tables ${err.message}`);
     }
