@@ -2,13 +2,15 @@ import { Message } from "discord.js";
 
 
 /**
- * the fn paramater always has to be a function that returns an embed it should take an offset and 
- * a page paramater the offset will be the data getting increamented ie the item you're looping over
+ * the callback must always take at least one param and thats the offset which will be the data getting incremented by the amount param
+ * it can also take a second optional paramater that will be the page number
+ * 
+ * @param amount the amount to increment or decrement by when the page changes
  */
-export async function paginate(message: Message, data: number, amount: number, fn: Function) {
+export async function paginate(message: Message, amount: number, fn: Function) {
 
     let   page   = 1;
-    let   offset = data;
+    let   offset = 0;
     const msg    = await message.channel.send(await fn(offset, page));
 
     await msg.react('⬅️');

@@ -51,7 +51,7 @@ export default class Partnerships extends Command {
                     .setFooter(`Page: ${page}`);
             }
 
-            await paginate(message, 0, 10, createEmbed);
+            await paginate(message, 10, createEmbed);
 
             return;
         }

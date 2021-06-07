@@ -3,6 +3,7 @@ import { Message, MessageEmbed } from 'discord.js';
 import { googleKey } from '../../config.json';
 import fetch from 'node-superfetch';
 import Responder from '../../services/responder';
+import { paginate } from '../../services/pagination';
 
 export default class Img extends Command {
     constructor() {
@@ -31,7 +32,7 @@ export default class Img extends Command {
         .get('https://customsearch.googleapis.com/customsearch/v1')
         .query({
             q: search,
-            num: String(10),
+            num: "10",
             safe: 'active',
             searchType: 'image',
             key: googleKey,
@@ -40,43 +41,16 @@ export default class Img extends Command {
 
         if(!body)
             return Responder.fail(message, 'Could not find any search results.');
-
-        let   item     = 0;
-        const forward  = '➡️'
-        const backward = '⬅️'
-
-        const msg = await message.channel.send(constructEmbed(item));
-        await msg.react(backward);
-        await msg.react(forward);
-
-        const collector = msg.createReactionCollector((r, u) => [forward, backward].includes(r.emoji.name) && u.id === message.author.id, {time: 60000});
-
-        collector.on('collect', async r => {
-            if(r.emoji.name === forward) {
-                item++;
-                await msg.edit(constructEmbed(item));
-            }
-            if(r.emoji.name === backward) {
-                item--;
-                await msg.edit(constructEmbed(item));
-            }
-
-            r.users.remove(message.author.id);
-        });
-
-        collector.on('end', async () => {
-            await msg.reactions.removeAll();
-            await msg.edit('message is now inactive!');
-        });
-
-        function constructEmbed(item: number) {
+       
+        const getImg = (item: number) => {
             const data = body.items[item];
-            const embed = new MessageEmbed()
+            return new MessageEmbed()
                 .setTitle(data.title)
                 .setDescription(`[Link](${data.link})`)
                 .setImage(data.link)
                 .setColor('RANDOM');
-            return embed;
         }
+
+        await paginate(message, 1, getImg);
     }
 }

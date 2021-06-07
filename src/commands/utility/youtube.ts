@@ -3,6 +3,7 @@ import { Message } from 'discord.js';
 import responder from '../../services/responder';
 import request from 'node-superfetch';
 import { youtubeKey } from '../../config.json';
+import { paginate } from '../../services/pagination';
 
 export default class Youtube extends Command {
     constructor() {
@@ -26,52 +27,25 @@ export default class Youtube extends Command {
         if(!query) 
             return responder.fail(message, 'you must provide a search term!');
 
-        try {
-            const { body }: any = await request
-            .get('https://www.googleapis.com/youtube/v3/search')
-            .query({
-                part:'snippet',
-                type: 'video',
-                maxResults: String(25),
-                q: query,
-                key: youtubeKey
-            });
+        const { body }: any = await request
+        .get('https://www.googleapis.com/youtube/v3/search')
+        .query({
+            part:'snippet',
+            type: 'video',
+            maxResults: "25",
+            q: query,
+            key: youtubeKey
+        });
 
-            if(!body.items.length) 
-                return responder.fail(message, 'i could not find any results');
+        if(!body.items.length) 
+            return responder.fail(message, 'i could not find any results');
 
-            let item = 0;
-            const getVideo = (item: number) => {
-                const data = body.items[item];
-                const video = `https://www.youtube.com/watch?v=${data.id.videoId}`
-                return video;
-            }
 
-            const msg = await message.channel.send(getVideo(item));
-
-            await msg.react('⬅️');
-            await msg.react('➡️');
-
-            const collector = msg.createReactionCollector((reaction, user) => ['⬅️', '➡️'].includes(reaction.emoji.name) && user.id === message.author.id, {time: 60000});
-
-            collector.on('collect', async r => {
-                if(r.emoji.name === '➡️') {
-                    item++
-                    await msg.edit(getVideo(item));
-                }
-                if(r.emoji.name === '⬅️') {
-                    item--
-                    await msg.edit(getVideo(item));
-                }
-                r.users.remove(message.author.id);
-            });
-
-            collector.on('end', async () => {
-                await msg.reactions.removeAll();
-                await msg.edit(`message is now inactive!\n${getVideo(item)}`);
-            });
-        } catch(err) {
-            responder.fail(message, 'there was an error searching for that video!');
+        const getVideo = (item: number) => {
+            const data = body.items[item];
+            return `https://www.youtube.com/watch?v=${data.id.videoId}`
         }
+        
+        await paginate(message, 1, getVideo);
     }
 }
