@@ -55,13 +55,17 @@ export default class PartnershipSettings extends Command {
 
             const data = client.settings.get(message.guild?.id!, 'partner-channel', null);
 
+            let response;
+
             if(!data) {
                 await client.settings.set(message.guild?.id!, 'partner-channel', ch.id);
+                response = `${ch} has been set as the partnership channel`;
             } else {
                 client.settings.delete(message.guild?.id!, 'partner-channel');
+                response = 'the partnership channel has been reset';
             }
 
-            return responder.send(message, `${ch} has been set as the partnership channel`);
+            return responder.send(message, response);
         }
 
         if(blacklist) {
@@ -98,7 +102,7 @@ export default class PartnershipSettings extends Command {
         }
 
         if(set) {
-            const parsedArgs = args.split(/\s+/g);
+            const parsedArgs = args.split(/,\s*/g);
             const member     = resolveMember(message, parsedArgs[0]);
             const int        = parseInt(parsedArgs[1]);
             
@@ -106,9 +110,9 @@ export default class PartnershipSettings extends Command {
                 return responder.fail(message, 'you must provide a valid member and a valid number');
 
             const data = await client.sql.query(`
-            INSERT INTO partnerships(member_id, count) VALUES($1, $2)
+            INSERT INTO partnerships(member_id, count, weekly) VALUES($1, $2, 0)
             ON CONFLICT (member_id) DO UPDATE
-            SET member_id = $1, count = $2
+            SET member_id = $1, count = $2, weekly = 0
             RETURNING count`, [member.id, parsedArgs[1]]);
 
             return responder.send(message, `${member}'s partnerships have been set to \`${data.rows[0].count}\``);

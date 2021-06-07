@@ -56,6 +56,6 @@ export default class Partnerships extends Listener {
             .setAuthor(message.author.username, message.author.displayAvatarURL())
             .setColor('RANDOM')
             .setDescription(`You have partnered with **${invite.guild?.name}**`)
-            .setFooter(`Partnerships: ${data.count} | Weekly: ${data.weekly} | Rank: ${rank}`)});
+            .setFooter(`Partnerships: ${data.count} | Weekly: ${data.weekly ?? 0} | Rank: ${rank}`)});
     }
 }
